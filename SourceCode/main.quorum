@@ -1,0 +1,95 @@
+use Libraries.Game.Game
+use Libraries.Game.Graphics.Model
+use Libraries.Game.Graphics.AmbientLight
+use Libraries.Game.Graphics.DirectionalLight
+use Libraries.Game.Graphics.Color
+use Libraries.Compute.Vector3
+use Libraries.Interface.Events.KeyboardEvent
+use Libraries.Game.InputMonitor
+
+
+class Main is Game
+
+Model cube
+Model ground
+Color color
+DirectionalLight dlight
+AmbientLight alight
+Model circle
+Vector3 force
+InputMonitor monitor
+KeyboardEvent button
+
+
+
+
+    action Main
+        StartGame()
+    end
+
+
+    action CreateGame
+ Add (dlight)
+    dlight:SetDirection(GetCamera3D():GetDirection())
+    dlight:SetColor(0.9,0.8,0.7,1)
+    
+
+    alight:SetColor(0.5,0.4,0.2,1)
+    SetAmbientLight(alight)
+
+   cube:LoadBox(1,1,1,color:Yellow())
+    cube:SetPosition(1,2,0)
+
+Add (cube)
+
+circle:LoadSphere(1,1,1,color:Blue())
+circle:SetPosition(-1,3,0)
+Add (circle)
+
+Add (ground)
+    ground:LoadBox(10,10,10,color:Green())
+    ground:SetPosition(0,-5,0)
+
+EnablePhysics3D(true)
+SetGravity3D(0,-10,0)
+cube:EnablePhysics(true)
+ground:EnablePhysics(true)
+ground:SetFriction(0.5)
+cube:SetResponsive()
+ground:SetUnmovable()
+cube:SetRestitution(0.5)
+circle:EnablePhysics(true)
+circle:SetResponsive()
+circle:SetRestitution(1)
+
+
+end
+
+
+    action Update(number seconds)
+
+if monitor:IsKeyPressed(button:UP)
+    force:Set(-1,12,2)
+    cube:ApplyForceToCenter(force)
+    end
+
+if monitor:IsKeyPressed(button:DOWN)
+    force:Set(0,-11,0)
+    cube:ApplyForceToCenter(force)
+    end
+
+
+if cube:GetY() >5
+    cube:SetY(2)
+    end
+
+if cube:GetX() >-7
+    cube:SetX(1)
+    end
+
+if cube:GetZ() >8
+    cube:SetZ(0)
+    end
+
+    end
+end
